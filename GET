@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>NoSuchKey</Code>
+  <Message>The specified key does not exist.</Message>
+  <RequestId>64C32C95E0A4B43934B11DEA</RequestId>
+  <HostId>minigame-bundles.oss-ap-southeast-1-internal.aliyuncs.com</HostId>
+  <Key>egypt-run/production/GET</Key>
+  <EC>0026-00000001</EC>
+</Error>
