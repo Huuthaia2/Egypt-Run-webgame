@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+
+<!-- Mirrored from egypt-run.apps.minigame.vip/minigame-index.html?mn_config=https://indigo.minigame.vip/v1/api/channel/indigo/main/game/egypt-run/config&ts=1690512177234 by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Jul 2023 02:48:53 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Egypt Runner 3D Game</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="minigame25e0.js?t=1684484980"></script>
+    <style>
+        .dialog {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            padding: 5px 10px;
+            color: #fff;
+            border-radius: 5px;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" width=960 height=600></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+        <div id="unity-warning"> </div>
+        <div id="unity-footer">
+            <div id="unity-webgl-logo"></div>
+            <div id="unity-fullscreen-button"></div>
+            <div id="unity-build-title">Egypt Runner 3D Game</div>
+        </div>
+    </div>
+    <script>
+        function showMartinToast(d, time) {
+            if (document.getElementById("dialog")) {
+                document.getElementById("dialog").innerHTML = d;
+                document.getElementById("dialog").style.display = "block";
+            } else {
+                var dialog = document.createElement("div");
+                dialog.id = "dialog";
+                dialog.className = "dialog";
+                dialog.innerHTML = d;
+                document.getElementsByTagName("body")[0].appendChild(dialog);
+            };
+            setTimeout(function() {
+                var dialog = document.getElementById("dialog");
+                if (dialog) {
+                    document.getElementById("dialog").style.display = "none";
+                }
+            }, time || 3000);
+        }
+
+        function Init() {
+            let date = new Date();
+            let newUser = 0;
+            let now = `${date.getDate()}-${date.getDay()}`;
+            let lastNow = localStorage.getItem("lastNow_egyptrun_h5_weiyou");
+            let firstNow = localStorage.getItem("firstNow_egyptrun_weiyou_xx");
+            let count = 0;
+            if (now != lastNow) {
+                localStorage.setItem("lastNow_egyptrun_h5_weiyou", now);
+                count = 1;
+            }
+
+            if (!firstNow) {
+                newUser = 1;
+            }
+            localStorage.setItem("firstNow_egyptrun_weiyou_xx", "1");
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
+                    var response = xhr.responseText;
+                    console.log(response);
+                }
+            }
+            xhr.open("GET", `https://www.luozhiming.shop:30001/game/count?channel=egyptrun_weiyou&dailyCount=${count}&newCount=${newUser}`, true);
+            xhr.send();
+        }
+        Init();
+    </script>
+    <script>
+        var container = document.querySelector("#unity-container");
+        var canvas = document.querySelector("#unity-canvas");
+        var loadingBar = document.querySelector("#unity-loading-bar");
+        var progressBarFull = document.querySelector("#unity-progress-bar-full");
+        var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+        var warningBanner = document.querySelector("#unity-warning");
+
+        // Shows a temporary message banner/ribbon for a few seconds, or
+        // a permanent error message on top of the canvas if type=='error'.
+        // If type=='warning', a yellow highlight color is used.
+        // Modify or remove this function to customize the visually presented
+        // way that non-critical warnings and error messages are presented to the
+        // user.
+        function unityShowBanner(msg, type) {
+            function updateBannerVisibility() {
+                warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+            }
+            var div = document.createElement('div');
+            div.innerHTML = msg;
+            warningBanner.appendChild(div);
+            if (type == 'error') div.style = 'background: red; padding: 10px;';
+            else {
+                if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+                setTimeout(function() {
+                    warningBanner.removeChild(div);
+                    updateBannerVisibility();
+                }, 5000);
+            }
+            updateBannerVisibility();
+        }
+
+        var buildUrl = "Build";
+        var loaderUrl = buildUrl + "/egyptrun.loader.js";
+        var config = {
+            dataUrl: buildUrl + "/egyptrun.data",
+            frameworkUrl: buildUrl + "/egyptrun.framework.js",
+            codeUrl: buildUrl + "/egyptrun.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "GCS",
+            productName: "Egypt Runner 3D Game",
+            productVersion: "1.0",
+            showBanner: unityShowBanner,
+        };
+
+        // By default Unity keeps WebGL canvas render target size matched with
+        // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+        // Set this to false if you want to decouple this synchronization from
+        // happening inside the engine, and you would instead like to size up
+        // the canvas DOM size and WebGL render target sizes yourself.
+        // config.matchWebGLToCanvasSize = false;
+
+        // if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        //   container.className = "unity-mobile";
+        //   // Avoid draining fillrate performance on mobile devices,
+        //   // and default/override low DPI mode on mobile browsers.
+        //   config.devicePixelRatio = 1;
+        //   unityShowBanner('WebGL builds are not supported on mobile devices.');
+        // } else {
+        //   canvas.style.width = "960px";
+        //   canvas.style.height = "600px";
+        // }
+
+        // 改成unity-mobile，使之全屏显示，否则默认是横屏
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1;
+        loadingBar.style.display = "block";
+
+        function startUnity() {
+            var script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+                createUnityInstance(canvas, config, (progress) => {
+                    progressBarFull.style.width = 100 * progress + "%";
+                }).then((unityInstance) => {
+                    loadingBar.style.display = "none";
+                    fullscreenButton.onclick = () => {
+                        unityInstance.SetFullscreen(1);
+                    };
+                    window.unityInstance = unityInstance;
+                }).catch((message) => {
+                    alert(message);
+                });
+            };
+            document.body.appendChild(script);
+        }
+
+        minigame.initializeAsync()
+            .then(function() {
+
+                console.info("minigame initializeAsync..");
+                // 记录启动来源
+                minigame.getEntryPointAsync().then(function(entry) {
+                    console.info("Entry Point: ", entry);
+                });
+
+                // 记录会话类型
+                const contextType = minigame.context.getType();
+                console.info("Context Type: ", contextType);
+
+                minigame.startGameAsync()
+                    .then(function() {
+                        startUnity();
+                        console.info("minigame startGameAsync..");
+                    })
+                    .catch(function(e) {
+                        cc.error(e);
+                    });
+
+            });
+    </script>
+</body>
+
+
+<!-- Mirrored from egypt-run.apps.minigame.vip/minigame-index.html?mn_config=https://indigo.minigame.vip/v1/api/channel/indigo/main/game/egypt-run/config&ts=1690512177234 by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Jul 2023 02:48:53 GMT -->
+</html>
